@@ -1,12 +1,5 @@
-const express = require("express");
 const axios = require("axios");
 const fs = require("fs");
-const cors = require("cors");
-const app = express();
-const port = 3000;
-
-app.use(cors());
-app.use(express.json());
 
 function extractFileId(videoLink) {
   const match = videoLink.match(
@@ -63,27 +56,7 @@ async function downloadGoogleDriveVideo(videoLink) {
   }
 }
 
-app.post("/download", async (req, res) => {
-  try {
-    const { videoLink } = req.body;
-
-    const result = await downloadGoogleDriveVideo(videoLink);
-
-    if (result.success) {
-      res.json(result);
-    } else {
-      res.status(400).json(result);
-    }
-  } catch (error) {
-    console.error("Error:", error.message);
-    res.status(500).json({ success: false, error: "Internal Server Error" });
-  }
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
-//here our req.body will look like
+module.exports = downloadGoogleDriveVideo;
 // {
 //   "videoLink": "https://drive.google.com/file/d/1x81r3q83seEQ4qoFD5xXxj4U-O_D1CjD/view?usp=sharing"
 // }
