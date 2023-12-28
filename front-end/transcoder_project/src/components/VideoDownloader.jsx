@@ -1,16 +1,25 @@
 // src/components/VideoDownloader.js
-
 import React, { useState } from "react";
+import {
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Box,
+} from "@mui/material";
 import axios from "axios";
 
 const VideoDownloader = () => {
   const [videoLink, setVideoLink] = useState("");
-  const [resolution, setResolution] = useState("1080p");
+  const [resolutions, setResolutions] = useState(["1080p"]);
 
   const handleGenerateClick = async () => {
     try {
       const response = await axios.post("http://localhost:3000/download", {
         videoLink,
+        resolutions,
       });
       console.log(response.data);
       // Handle the response as needed (e.g., show a success message)
@@ -21,31 +30,44 @@ const VideoDownloader = () => {
   };
 
   return (
-    <div>
-      <label>
-        Video Link:
-        <input
-          type="text"
-          value={videoLink}
-          onChange={(e) => setVideoLink(e.target.value)}
-        />
-      </label>
+    <Box sx={{ marginTop: 2, textAlign: "center" }}>
+      <TextField
+        label="Video Link"
+        variant="outlined"
+        fullWidth
+        InputProps={{
+          style: { color: "white" },
+        }}
+        InputLabelProps={{ style: { color: "white" } }}
+        value={videoLink}
+        onChange={(e) => setVideoLink(e.target.value)}
+      />
+      <FormControl fullWidth sx={{ marginTop: 2 }}>
+        <InputLabel id="resolution-label" sx={{ color: "white" }}>
+          Resolutions
+        </InputLabel>
+        <Select
+          labelId="resolution-label"
+          id="resolutions"
+          multiple
+          value={resolutions}
+          label="Resolutions"
+          onChange={(e) => setResolutions(e.target.value)}
+          sx={{ color: "white" }}>
+          <MenuItem value="480p">480p</MenuItem>
+          <MenuItem value="720p">720p</MenuItem>
+          <MenuItem value="1080p">1080p</MenuItem>
+          {/* Add more resolutions as needed */}
+        </Select>
+      </FormControl>
 
-      <label>
-        Resolution:
-        <select
-          value={resolution}
-          onChange={(e) => setResolution(e.target.value)}>
-          <option value="1080p">1080p</option>
-          <option value="720p">720p</option>
-          <option value="480p">480p</option>
-          <option value="360p">360p</option>
-          <option value="240p">240p</option>
-        </select>
-      </label>
-
-      <button onClick={handleGenerateClick}>Generate</button>
-    </div>
+      <Button
+        variant="contained"
+        onClick={handleGenerateClick}
+        sx={{ marginTop: 2 }}>
+        Generate
+      </Button>
+    </Box>
   );
 };
 

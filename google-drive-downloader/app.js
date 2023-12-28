@@ -20,7 +20,14 @@ app.post("/download", async (req, res) => {
       const { filePath } = downloadResult;
 
       // Transcode the downloaded file
-      const transcodedResolutions = ["720x480", "1280x720", "1920x1080"];
+      const transcodedResolutions = [
+        "426x240",
+        "640x360",
+        "854x480",
+        "1280x720",
+        "1920x1080",
+      ];
+
       for (const resolution of transcodedResolutions) {
         await transcodeVideo(filePath, "./transcoded", resolution);
       }
